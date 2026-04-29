@@ -1,0 +1,39 @@
+{% extends 'admin/_layout.html.twig' %}
+{% block title %}Utilisateurs{% endblock %}
+{% block content %}
+    <h1>Utilisateurs</h1>
+
+    <form method="get" style="margin-bottom: 12px;">
+        <input type="text" name="q" value="{{ search }}" placeholder="email ou pseudonyme">
+        <button type="submit">Rechercher</button>
+        {% if search %}<a class="btn secondary" href="{{ path('admin_users_index') }}">Réinitialiser</a>{% endif %}
+    </form>
+
+    <section>
+        <table>
+            <thead><tr><th>Pseudonyme</th><th>Email</th><th>Rôles</th><th>Inscription</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for u in paginator %}
+                <tr>
+                    <td>{{ u.pseudonym }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.roles|join(', ') }}</td>
+                    <td>{{ u.createdAt|date('d/m/Y') }}</td>
+                    <td><a class="btn secondary" href="{{ path('admin_users_show', {uid: u.uid}) }}">Voir</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5"><em>Aucun utilisateur.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set pageCount = (total / perPage)|round(0, 'ceil') %}
+        {% if pageCount > 1 %}
+            <nav style="margin-top: 12px;">
+                {% if page > 1 %}<a class="btn secondary" href="{{ path('admin_users_index', {q: search, page: page - 1}) }}">← Précédent</a>{% endif %}
+                <span style="margin: 0 12px;">Page {{ page }} / {{ pageCount }}</span>
+                {% if page < pageCount %}<a class="btn secondary" href="{{ path('admin_users_index', {q: search, page: page + 1}) }}">Suivant →</a>{% endif %}
+            </nav>
+        {% endif %}
+    </section>
+{% endblock %}

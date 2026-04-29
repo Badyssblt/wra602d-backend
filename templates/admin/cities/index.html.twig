@@ -1,0 +1,25 @@
+{% extends 'admin/_layout.html.twig' %}
+{% block title %}Villes{% endblock %}
+{% block content %}
+    <h1>Villes</h1>
+    <section>
+        <table>
+            <thead><tr><th>Nom</th><th>Joueur</th><th>Argent</th><th>Grille</th><th>Bâtiments</th><th>Mise à jour</th><th></th></tr></thead>
+            <tbody>
+            {% for c in cities %}
+                <tr>
+                    <td>{{ c.name }}</td>
+                    <td>{{ c.user.pseudonym }}</td>
+                    <td>{{ c.money }}</td>
+                    <td>{{ c.gridSize }}×{{ c.gridSize }}</td>
+                    <td>{{ c.buildings|length }}</td>
+                    <td>{{ c.updatedAt|date('d/m/Y H:i') }}</td>
+                    <td><a class="btn secondary" href="{{ path('admin_cities_show', {uid: c.uid}) }}">Voir</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7"><em>Aucune ville sauvegardée.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

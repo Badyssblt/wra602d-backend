@@ -1,0 +1,55 @@
+{% extends 'admin/_layout.html.twig' %}
+{% block title %}{{ user.pseudonym }}{% endblock %}
+{% block content %}
+    <h1>{{ user.pseudonym }} <small style="color:#6b7280;">({{ user.email }})</small></h1>
+
+    <section>
+        <p><strong>UID:</strong> {{ user.uid }}</p>
+        <p><strong>Rôles:</strong> {{ user.roles|join(', ') }}</p>
+        <p><strong>Inscription:</strong> {{ user.createdAt|date('d/m/Y H:i') }}</p>
+
+        <form method="post" action="{{ path('admin_users_promote', {uid: user.uid}) }}" style="display:inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('promote' ~ user.uid) }}">
+            <button type="submit" class="secondary">{{ 'ROLE_ADMIN' in user.roles ? 'Retirer admin' : 'Promouvoir admin' }}</button>
+        </form>
+
+        <form method="post" action="{{ path('admin_users_delete', {uid: user.uid}) }}" style="display:inline;" onsubmit="return confirm('Supprimer cet utilisateur ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.uid) }}">
+            <button type="submit" class="danger">Supprimer</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Scores ({{ user.scores|length }})</h2>
+        <table>
+            <thead><tr><th>Score</th><th>Population</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for s in user.scores %}
+                <tr><td>{{ s.score }}</td><td>{{ s.population }}</td><td>{{ s.createdAt|date('d/m/Y H:i') }}</td></tr>
+            {% else %}
+                <tr><td colspan="3"><em>Aucun score.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Villes ({{ user.cities|length }})</h2>
+        <table>
+            <thead><tr><th>Nom</th><th>Argent</th><th>Bâtiments</th><th>Mise à jour</th><th></th></tr></thead>
+            <tbody>
+            {% for c in user.cities %}
+                <tr>
+                    <td>{{ c.name }}</td>
+                    <td>{{ c.money }}</td>
+                    <td>{{ c.buildings|length }}</td>
+                    <td>{{ c.updatedAt|date('d/m/Y H:i') }}</td>
+                    <td><a class="btn secondary" href="{{ path('admin_cities_show', {uid: c.uid}) }}">Voir</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5"><em>Aucune ville.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

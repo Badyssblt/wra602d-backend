@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "WRA602 City Builder",
+    "description": "Collection Postman pour l'API du backoffice (wra602d-backend) et le micro-service mailer (wra602d-microservice).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "microservice_url", "value": "http://localhost:8001" },
+    { "key": "microservice_token", "value": "replace-me" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/users/register",
+            "body": { "mode": "raw", "raw": "{\"email\":\"alice@example.com\",\"pseudonym\":\"alice\",\"password\":\"Welcome1!\"}" }
+          }
+        },
+        {
+          "name": "Login (returns JWT)",
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('token', pm.response.json().token);"] }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/login_check",
+            "body": { "mode": "raw", "raw": "{\"email\":\"alice@example.com\",\"password\":\"Welcome1!\"}" }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/users/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scores",
+      "item": [
+        {
+          "name": "Create score",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/ld+json" }
+            ],
+            "url": "{{base_url}}/api/scores",
+            "body": { "mode": "raw", "raw": "{\"score\":12450,\"moneyFinal\":50000,\"population\":42,\"ticksPlayed\":120}" }
+          }
+        },
+        {
+          "name": "My scores (filtered/ordered)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/scores?score[gt]=100&order[score]=desc"
+          }
+        },
+        {
+          "name": "Public leaderboard",
+          "request": { "method": "GET", "url": "{{base_url}}/api/scores/leaderboard" }
+        },
+        {
+          "name": "Share score",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/scores/<UID>/share",
+            "body": { "mode": "raw", "raw": "{}" }
+          }
+        },
+        {
+          "name": "Public shared score",
+          "request": { "method": "GET", "url": "{{base_url}}/api/scores/share/<SHARE_TOKEN>" }
+        }
+      ]
+    },
+    {
+      "name": "Cities",
+      "item": [
+        {
+          "name": "Save (upsert) city",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/ld+json" }
+            ],
+            "url": "{{base_url}}/api/cities/save",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"01JSBT9NVDA7XVD7H9S6NVB00V\",\n  \"name\": \"MyTown\",\n  \"money\": 87500,\n  \"gridSize\": 12,\n  \"buildings\": [\n    {\"type\":\"house\",\"posX\":3,\"posZ\":4},\n    {\"type\":\"office\",\"posX\":5,\"posZ\":4}\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mailer microservice",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": "{{microservice_url}}/health" }
+        },
+        {
+          "name": "Send welcome email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-Microservice-Token", "value": "{{microservice_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{microservice_url}}/api/send-email",
+            "body": { "mode": "raw", "raw": "{\"to\":\"alice@example.com\",\"subject\":\"Bienvenue\",\"template\":\"welcome\",\"context\":{\"username\":\"alice\"}}" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,19 @@
 
 services:
+  app:
+    ports:
+      - "8000:80"
+    volumes:
+      # Bind-mount du code pour hot reload en dev
+      - .:/app
+      # Vendor & cache dans des volumes nommés (évite les conflits de droits avec l'hôte)
+      - app_vendor:/app/vendor
+      - app_var:/app/var
+
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
+      - "5432:5432"
 ###< doctrine/doctrine-bundle ###
 
 ###> symfony/mailer ###
@@ -11,8 +21,12 @@ services:
     image: axllent/mailpit
     ports:
       - "1025"
-      - "8025"
+      - "8025:8025"
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 ###< symfony/mailer ###
+
+volumes:
+  app_vendor:
+  app_var:

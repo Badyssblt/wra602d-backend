@@ -1,0 +1,38 @@
+{% extends 'admin/_layout.html.twig' %}
+{% block title %}Scores{% endblock %}
+{% block content %}
+    <h1>Scores</h1>
+
+    <form method="get" style="margin-bottom: 12px; display: flex; gap: 8px;">
+        <input type="text" name="q" value="{{ q }}" placeholder="pseudonyme ou email">
+        <input type="number" name="min" value="{{ min }}" placeholder="score min">
+        <input type="number" name="max" value="{{ max }}" placeholder="score max">
+        <button type="submit">Filtrer</button>
+        <a class="btn secondary" href="{{ path('admin_scores_index') }}">Réinitialiser</a>
+    </form>
+
+    <section>
+        <table>
+            <thead><tr><th>Joueur</th><th>Score</th><th>Population</th><th>Argent</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+            {% for s in scores %}
+                <tr>
+                    <td>{{ s.user.pseudonym }}</td>
+                    <td>{{ s.score }}</td>
+                    <td>{{ s.population }}</td>
+                    <td>{{ s.moneyFinal }}</td>
+                    <td>{{ s.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <form method="post" action="{{ path('admin_scores_delete', {uid: s.uid}) }}" onsubmit="return confirm('Supprimer ce score ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ s.uid) }}">
+                            <button type="submit" class="danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6"><em>Aucun score.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"><title>Connexion admin — WRA602</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #1e293b; color: white; height: 100vh; margin: 0; display: grid; place-items: center; }
+        form { background: #334155; padding: 32px; border-radius: 12px; min-width: 320px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+        h1 { margin-top: 0; }
+        label { display: block; margin: 12px 0 4px; }
+        input { width: 100%; padding: 8px 10px; border-radius: 4px; border: 1px solid #475569; background: #1e293b; color: white; box-sizing: border-box; }
+        button { margin-top: 16px; width: 100%; padding: 10px; background: #2b6cb0; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; }
+        .err { background: #7f1d1d; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+<form method="post">
+    <h1>Connexion admin</h1>
+    {% if error %}<div class="err">{{ error.messageKey|trans(error.messageData, 'security') }}</div>{% endif %}
+    <label>Email<input type="email" name="email" value="{{ last_username }}" required autofocus></label>
+    <label>Mot de passe<input type="password" name="password" required></label>
+    <button type="submit">Se connecter</button>
+</form>
+</body>
+</html>

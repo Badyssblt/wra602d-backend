@@ -1,0 +1,31 @@
+{% extends 'admin/_layout.html.twig' %}
+{% block title %}{{ city.name }}{% endblock %}
+{% block content %}
+    <h1>{{ city.name }} <small style="color:#6b7280;">de {{ city.user.pseudonym }}</small></h1>
+
+    <section>
+        <p><strong>Argent:</strong> {{ city.money }} €</p>
+        <p><strong>Grille:</strong> {{ city.gridSize }}×{{ city.gridSize }}</p>
+        <p><strong>Bâtiments:</strong> {{ city.buildings|length }}</p>
+        <p><strong>Mise à jour:</strong> {{ city.updatedAt|date('d/m/Y H:i') }}</p>
+    </section>
+
+    <section>
+        <h2>Plan</h2>
+        <div class="grid-render" style="grid-template-columns: repeat({{ city.gridSize }}, 18px);">
+            {% for z in 0..city.gridSize - 1 %}
+                {% for x in 0..city.gridSize - 1 %}
+                    {% set key = x ~ '-' ~ z %}
+                    {% set type = grid[key] ?? '' %}
+                    <div class="cell {{ type }}" title="{{ x }},{{ z }}{{ type ? ' — ' ~ type : '' }}"></div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <p style="margin-top: 12px;">
+            <span style="display:inline-block;width:14px;height:14px;background:#f59e0b;"></span> house
+            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#6366f1;"></span> office
+            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#10b981;"></span> park
+            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#6b7280;"></span> road
+        </p>
+    </section>
+{% endblock %}

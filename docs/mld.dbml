@@ -1,0 +1,49 @@
+// MLD WRA602 — City Builder backoffice
+// Importer dans https://dbdiagram.io pour générer le visuel.
+
+Table app_user as U {
+  id bigint [pk, increment]
+  uid char(26) [unique, not null, note: 'ULID base32 — identifiant API public']
+  email varchar(180) [unique, not null]
+  pseudonym varchar(30) [unique, not null]
+  password varchar(255) [not null, note: 'hash argon2/bcrypt']
+  roles json [not null, default: `[]`]
+  created_at timestamp [not null]
+}
+
+Table game_score as S {
+  id bigint [pk, increment]
+  uid char(26) [unique, not null]
+  user_id bigint [ref: > U.id, not null, note: 'ON DELETE CASCADE']
+  score int [not null, note: '>= 0']
+  money_final int [not null]
+  population int [not null, default: 0]
+  ticks_played int [not null, default: 0]
+  city_id bigint [ref: - C.id, null, note: 'OneToOne snapshot, ON DELETE SET NULL']
+  share_token char(26) [unique, null]
+  created_at timestamp [not null]
+}
+
+Table city as C {
+  id bigint [pk, increment]
+  uid char(26) [unique, not null]
+  user_id bigint [ref: > U.id, not null, note: 'ON DELETE CASCADE']
+  name varchar(80) [not null]
+  money int [not null, note: '>= 0']
+  grid_size smallint [not null, default: 12, note: '4..32']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table building as B {
+  id bigint [pk, increment]
+  city_id bigint [ref: > C.id, not null, note: 'ON DELETE CASCADE']
+  type varchar(16) [not null, note: 'house|office|park|road']
+  pos_x smallint [not null]
+  pos_z smallint [not null]
+  created_at timestamp [not null]
+
+  indexes {
+    (city_id, pos_x, pos_z) [unique, name: 'building_position_unique']
+  }
+}

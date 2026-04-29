@@ -5,6 +5,15 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    http_client:
+        scoped_clients:
+            mailer.client:
+                base_uri: '%env(MICROSERVICE_MAILER_URL)%'
+                headers:
+                    X-Microservice-Token: '%env(MICROSERVICE_MAILER_TOKEN)%'
+                    Content-Type: application/json
+                timeout: 5
+
     #esi: true
     #fragments: true
 
