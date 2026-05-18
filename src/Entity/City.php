@@ -92,6 +92,27 @@ class City
     #[Groups(['city:read', 'city:write'])]
     private int $gridSize = 12;
 
+    /**
+     * Snapshot of the player-side score at the latest save. The leaderboard
+     * GameScore is upserted from this value by ScoreUpsertService.
+     */
+    #[ORM\Column(options: ['default' => 0])]
+    #[Assert\PositiveOrZero]
+    #[Groups(['city:read', 'city:write'])]
+    private int $score = 0;
+
+    /** Snapshot of population at the latest save. */
+    #[ORM\Column(options: ['default' => 0])]
+    #[Assert\PositiveOrZero]
+    #[Groups(['city:read', 'city:write'])]
+    private int $population = 0;
+
+    /** Cumulative seconds of gameplay across the city's lifetime. */
+    #[ORM\Column(options: ['default' => 0])]
+    #[Assert\PositiveOrZero]
+    #[Groups(['city:read', 'city:write'])]
+    private int $ticksPlayed = 0;
+
     /** @var list<array{tx: int, tz: int}> */
     #[ORM\Column(type: 'json', options: ['default' => '[]'])]
     #[Groups(['city:read', 'city:write'])]
@@ -181,6 +202,39 @@ class City
     {
         $this->gridSize = $gridSize;
 
+        return $this;
+    }
+
+    public function getScore(): int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): static
+    {
+        $this->score = max(0, $score);
+        return $this;
+    }
+
+    public function getPopulation(): int
+    {
+        return $this->population;
+    }
+
+    public function setPopulation(int $population): static
+    {
+        $this->population = max(0, $population);
+        return $this;
+    }
+
+    public function getTicksPlayed(): int
+    {
+        return $this->ticksPlayed;
+    }
+
+    public function setTicksPlayed(int $ticksPlayed): static
+    {
+        $this->ticksPlayed = max(0, $ticksPlayed);
         return $this;
     }
 

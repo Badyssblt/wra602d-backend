@@ -52,10 +52,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
         ),
         new Post(
-            uriTemplate: '/scores',
-            security: "is_granted('ROLE_USER')",
-        ),
-        new Post(
             uriTemplate: '/scores/{uid}/share',
             requirements: ['uid' => '[A-Z0-9]{26}'],
             name: 'score_share',

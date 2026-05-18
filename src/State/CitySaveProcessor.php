@@ -10,6 +10,7 @@ use App\Entity\Building;
 use App\Entity\City;
 use App\Entity\User;
 use App\Repository\CityRepository;
+use App\Service\ScoreUpsertService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -23,6 +24,7 @@ final readonly class CitySaveProcessor implements ProcessorInterface
         private EntityManagerInterface $em,
         private Security $security,
         private CityRepository $cityRepo,
+        private ScoreUpsertService $scoreUpsert,
     ) {
     }
 
@@ -47,6 +49,9 @@ final readonly class CitySaveProcessor implements ProcessorInterface
             $existing->setMoney($data->getMoney());
             $existing->setGridSize($data->getGridSize());
             $existing->setUnlockedTiles($data->getUnlockedTiles());
+            $existing->setScore($data->getScore());
+            $existing->setPopulation($data->getPopulation());
+            $existing->setTicksPlayed($data->getTicksPlayed());
             foreach ($existing->getBuildings()->toArray() as $b) {
                 $existing->removeBuilding($b);
                 $this->em->remove($b);
@@ -68,6 +73,10 @@ final readonly class CitySaveProcessor implements ProcessorInterface
         }
 
         $this->em->flush();
+
+        // Upsert the leaderboard GameScore + credit XP delta. Anti-farming
+        // is enforced inside the service (XP only on a new best).
+        $this->scoreUpsert->applyCitySnapshot($user, $city);
 
         return $city;
     }

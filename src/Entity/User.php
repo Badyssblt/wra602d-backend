@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\Service\ProgressionPolicy;
 use App\State\MeProvider;
 use App\State\UserRegisterProcessor;
 use App\Validator as CustomAssert;
@@ -113,6 +114,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private \DateTimeImmutable $createdAt;
 
+    /**
+     * Total experience points accumulated across all submitted scores.
+     * Updated atomically inside the same flush as the GameScore that earned it.
+     */
+    #[ORM\Column(options: ['default' => 0])]
+    #[Assert\PositiveOrZero]
+    #[Groups(['user:read'])]
+    private int $xp = 0;
+
+    /**
+     * Number of times the player has prestiged. Each prestige resets level
+     * but grants a permanent +10 % multiplier to XP gain and score submission.
+     */
+    #[ORM\Column(options: ['default' => 0])]
+    #[Assert\PositiveOrZero]
+    #[Groups(['user:read'])]
+    private int $prestigeLevel = 0;
+
     /** @var Collection<int, GameScore> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: GameScore::class, orphanRemoval: true)]
     private Collection $scores;
@@ -204,6 +223,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getXp(): int
+    {
+        return $this->xp;
+    }
+
+    public function setXp(int $xp): static
+    {
+        $this->xp = max(0, $xp);
+        return $this;
+    }
+
+    public function addXp(int $delta): static
+    {
+        if ($delta > 0) {
+            $this->xp += $delta;
+        }
+        return $this;
+    }
+
+    public function getPrestigeLevel(): int
+    {
+        return $this->prestigeLevel;
+    }
+
+    public function setPrestigeLevel(int $prestigeLevel): static
+    {
+        $this->prestigeLevel = max(0, $prestigeLevel);
+        return $this;
+    }
+
+    /** Derived from xp + prestigeLevel via the central policy. */
+    #[Groups(['user:read'])]
+    public function getLevel(): int
+    {
+        return ProgressionPolicy::levelFromXp($this->xp);
+    }
+
+    /**
+     * XP needed to reach the next level — useful for the HUD progress bar.
+     * Returns null when MAX_LEVEL is reached.
+     */
+    #[Groups(['user:read'])]
+    public function getXpForNextLevel(): ?int
+    {
+        $level = $this->getLevel();
+        if ($level >= ProgressionPolicy::MAX_LEVEL) {
+            return null;
+        }
+        return ProgressionPolicy::xpForLevel($level + 1);
+    }
+
+    /**
+     * Building types unlocked at the player's current level (always includes the starter set).
+     *
+     * @return list<string>
+     */
+    #[Groups(['user:read'])]
+    public function getUnlockedBuildings(): array
+    {
+        return ProgressionPolicy::unlockedBuildings($this->getLevel());
     }
 
     /** @return Collection<int, GameScore> */

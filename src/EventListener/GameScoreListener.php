@@ -5,36 +5,28 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\GameScore;
-use App\Entity\User;
 use App\Notifier\MailerNotifierInterface;
 use App\Repository\GameScoreRepository;
 use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\AsEntityListener;
-use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: GameScore::class)]
+/**
+ * Sends the "new best score" mail when a freshly-inserted GameScore is the
+ * user's best.
+ *
+ * Score/XP business logic lives in {@see App\Service\ScoreUpsertService}, which
+ * is called from CitySaveProcessor — this listener stays a thin notifier.
+ */
 #[AsEntityListener(event: Events::postPersist, method: 'postPersist', entity: GameScore::class)]
 final class GameScoreListener
 {
     public function __construct(
-        private readonly Security $security,
         private readonly MailerNotifierInterface $mailer,
         private readonly GameScoreRepository $repository,
         private readonly LoggerInterface $logger,
     ) {
-    }
-
-    public function prePersist(GameScore $score, PrePersistEventArgs $event): void
-    {
-        if (null === $score->getUser()) {
-            $current = $this->security->getUser();
-            if ($current instanceof User) {
-                $score->setUser($current);
-            }
-        }
     }
 
     public function postPersist(GameScore $score, PostPersistEventArgs $event): void
