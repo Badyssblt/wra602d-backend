@@ -52,12 +52,12 @@ final class GameScoreRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = <<<'SQL'
-            SELECT TO_CHAR(DATE(created_at), 'YYYY-MM-DD') AS day, COUNT(*) AS count
-            FROM game_score
-            WHERE created_at >= NOW() - INTERVAL '7 days'
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at) ASC
-        SQL;
+                SELECT TO_CHAR(DATE(created_at), 'YYYY-MM-DD') AS day, COUNT(*) AS count
+                FROM game_score
+                WHERE created_at >= NOW() - INTERVAL '7 days'
+                GROUP BY DATE(created_at)
+                ORDER BY DATE(created_at) ASC
+            SQL;
         /** @var list<array{day: string, count: string|int}> $rows */
         $rows = $conn->executeQuery($sql)->fetchAllAssociative();
 

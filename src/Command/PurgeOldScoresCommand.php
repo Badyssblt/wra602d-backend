@@ -32,7 +32,7 @@ final class PurgeOldScoresCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $days = max(1, (int) $input->getOption('days'));
-        $threshold = (new \DateTimeImmutable())->modify(sprintf('-%d days', $days));
+        $threshold = new \DateTimeImmutable()->modify(sprintf('-%d days', $days));
 
         $count = (int) $this->em->createQueryBuilder()
             ->select('COUNT(s)')

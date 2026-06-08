@@ -48,10 +48,33 @@ class UserQuestCompletion
         $this->claimedAt = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int { return $this->id; }
-    public function getUser(): User { return $this->user; }
-    public function getQuestCode(): string { return $this->questCode; }
-    public function getPeriodKey(): string { return $this->periodKey; }
-    public function getXpAwarded(): int { return $this->xpAwarded; }
-    public function getClaimedAt(): \DateTimeImmutable { return $this->claimedAt; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function getQuestCode(): string
+    {
+        return $this->questCode;
+    }
+
+    public function getPeriodKey(): string
+    {
+        return $this->periodKey;
+    }
+
+    public function getXpAwarded(): int
+    {
+        return $this->xpAwarded;
+    }
+
+    public function getClaimedAt(): \DateTimeImmutable
+    {
+        return $this->claimedAt;
+    }
 }

@@ -51,9 +51,9 @@ final class UserPrestigeController extends AbstractController
 
         return new JsonResponse([
             'prestigeLevel' => $user->getPrestigeLevel(),
-            'xp'            => $user->getXp(),
-            'level'         => $user->getLevel(),
-            'multiplier'    => ProgressionPolicy::scoreMultiplier($user->getPrestigeLevel()),
+            'xp' => $user->getXp(),
+            'level' => $user->getLevel(),
+            'multiplier' => ProgressionPolicy::scoreMultiplier($user->getPrestigeLevel()),
         ]);
     }
 }

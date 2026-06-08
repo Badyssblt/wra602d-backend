@@ -23,6 +23,7 @@ final class UserQuestCompletionRepository extends ServiceEntityRepository
      * Returns the set of quest codes the user has already claimed for the given period.
      *
      * @param list<string> $questCodes
+     *
      * @return list<string>
      */
     public function findClaimedCodes(User $user, array $questCodes, string $periodKey): array

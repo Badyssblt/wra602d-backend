@@ -19,7 +19,7 @@ final class CitySaveTest extends AbstractApiTestCase
     public function testSaveAndReplaceBuildings(): void
     {
         $client = $this->clientFor('user1@local', 'player1234');
-        $uid = (new Ulid())->toBase32();
+        $uid = new Ulid()->toBase32();
 
         $payload = [
             'uid' => $uid,
@@ -63,7 +63,7 @@ final class CitySaveTest extends AbstractApiTestCase
         $client->request('POST', '/api/cities/save', [
             'headers' => ['Content-Type' => 'application/ld+json'],
             'body' => json_encode([
-                'uid' => (new Ulid())->toBase32(),
+                'uid' => new Ulid()->toBase32(),
                 'name' => 'BadTown',
                 'money' => 0,
                 'gridSize' => 12,

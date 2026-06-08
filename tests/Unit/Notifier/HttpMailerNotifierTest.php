@@ -24,7 +24,7 @@ final class HttpMailerNotifierTest extends TestCase
         });
         $notifier = new HttpMailerNotifier($client, 'http://localhost:5173', new NullLogger());
 
-        $user = (new User())->setEmail('alice@example.com')->setPseudonym('alice');
+        $user = new User()->setEmail('alice@example.com')->setPseudonym('alice');
         $notifier->sendWelcomeEmail($user);
 
         self::assertNotNull($captured);
@@ -42,9 +42,9 @@ final class HttpMailerNotifierTest extends TestCase
         $client = new MockHttpClient(static fn (): MockResponse => new MockResponse('boom', ['http_code' => 500]));
         $notifier = new HttpMailerNotifier($client, 'http://localhost:5173', new NullLogger());
 
-        $score = (new GameScore())
+        $score = new GameScore()
             ->setScore(100)
-            ->setUser((new User())->setEmail('a@b.c')->setPseudonym('ab'));
+            ->setUser(new User()->setEmail('a@b.c')->setPseudonym('ab'));
 
         // Should not throw — fire-and-forget semantics.
         $notifier->sendBestScoreNotification($score);

@@ -142,7 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->uid = (new Ulid())->toBase32();
+        $this->uid = new Ulid()->toBase32();
         $this->createdAt = new \DateTimeImmutable();
         $this->scores = new ArrayCollection();
         $this->cities = new ArrayCollection();
@@ -233,6 +233,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setXp(int $xp): static
     {
         $this->xp = max(0, $xp);
+
         return $this;
     }
 
@@ -241,6 +242,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($delta > 0) {
             $this->xp += $delta;
         }
+
         return $this;
     }
 
@@ -252,6 +254,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrestigeLevel(int $prestigeLevel): static
     {
         $this->prestigeLevel = max(0, $prestigeLevel);
+
         return $this;
     }
 
@@ -273,6 +276,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($level >= ProgressionPolicy::MAX_LEVEL) {
             return null;
         }
+
         return ProgressionPolicy::xpForLevel($level + 1);
     }
 

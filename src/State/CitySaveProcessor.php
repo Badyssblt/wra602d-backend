@@ -30,10 +30,6 @@ final readonly class CitySaveProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): City
     {
-        if (!$data instanceof City) {
-            throw new \LogicException('Expected City entity.');
-        }
-
         $user = $this->security->getUser();
         if (!$user instanceof User) {
             throw new AccessDeniedHttpException();
@@ -58,7 +54,7 @@ final readonly class CitySaveProcessor implements ProcessorInterface
             }
             $this->em->flush();
             foreach ($data->getBuildings() as $b) {
-                $clone = (new Building())
+                $clone = new Building()
                     ->setType($b->getType())
                     ->setPosX($b->getPosX())
                     ->setPosZ($b->getPosZ());

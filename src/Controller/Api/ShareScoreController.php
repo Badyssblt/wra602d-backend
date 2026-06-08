@@ -22,7 +22,7 @@ final class ShareScoreController extends AbstractController
     public function __invoke(GameScore $data): JsonResponse
     {
         if (null === $data->getShareToken()) {
-            $data->setShareToken((new Ulid())->toBase32());
+            $data->setShareToken(new Ulid()->toBase32());
             $this->em->flush();
         }
 

@@ -18,7 +18,7 @@ final class AuthTest extends AbstractApiTestCase
         $client->request('POST', '/api/users/register', [
             'headers' => ['Content-Type' => 'application/json'],
             'body' => json_encode([
-                'email' => 'newbie@local',
+                'email' => 'newbie@local.test',
                 'pseudonym' => 'newbie',
                 'password' => 'Welcome1!',
             ]),

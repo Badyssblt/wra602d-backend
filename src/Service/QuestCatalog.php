@@ -82,6 +82,7 @@ final class QuestCatalog
                 return $quest;
             }
         }
+
         return null;
     }
 
@@ -91,6 +92,7 @@ final class QuestCatalog
         if (self::KIND_WEEKLY === $kind) {
             return $now->format('o-\WW'); // ISO week, e.g. "2026-W20"
         }
+
         return $now->format('Y-m-d');
     }
 
@@ -100,6 +102,8 @@ final class QuestCatalog
 
     /**
      * Returns the player's best value for the quest's metric within the relevant period.
+     *
+     * @param array<string, mixed> $quest
      */
     public function bestProgressFor(User $user, array $quest, \DateTimeImmutable $now): int
     {
@@ -108,9 +112,9 @@ final class QuestCatalog
             : $now->setTime(0, 0);
 
         $field = match ($quest['metric']) {
-            self::METRIC_SCORE      => 's.score',
+            self::METRIC_SCORE => 's.score',
             self::METRIC_POPULATION => 's.population',
-            self::METRIC_TICKS      => 's.ticksPlayed',
+            self::METRIC_TICKS => 's.ticksPlayed',
             default => 's.score',
         };
 

@@ -56,7 +56,9 @@ final class AppFixtures extends Fixture
                 $score->setMoneyFinal(40_000 + $s * 5000);
                 $score->setPopulation(20 + $s);
                 $score->setTicksPlayed(50 + $s * 10);
-                $score->setCity($city);
+                if (0 === $s) {
+                    $score->setCity($city);
+                }
                 $manager->persist($score);
             }
         }

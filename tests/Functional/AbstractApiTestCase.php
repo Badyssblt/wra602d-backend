@@ -6,7 +6,6 @@ namespace App\Tests\Functional;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
-use App\DataFixtures\AppFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -15,6 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractApiTestCase extends ApiTestCase
 {
+    protected static ?bool $alwaysBootKernel = true;
+
     protected function loadFixtures(): void
     {
         $container = self::getContainer();

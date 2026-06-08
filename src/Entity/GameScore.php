@@ -40,16 +40,16 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: ['groups' => ['score:read', 'score:public']],
         ),
         new Get(
+            uriTemplate: '/scores/{uid}',
+            requirements: ['uid' => '[A-Z0-9]{26}'],
+            security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
+        ),
+        new Get(
             uriTemplate: '/scores/share/{shareToken}',
             name: 'shared_score',
             description: 'Affichage public d’un score partagé',
             uriVariables: ['shareToken' => new \ApiPlatform\Metadata\Link(fromClass: GameScore::class, identifiers: ['shareToken'])],
             normalizationContext: ['groups' => ['score:read', 'score:public']],
-        ),
-        new Get(
-            uriTemplate: '/scores/{uid}',
-            requirements: ['uid' => '[A-Z0-9]{26}'],
-            security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
         ),
         new Post(
             uriTemplate: '/scores/{uid}/share',
@@ -129,7 +129,7 @@ class GameScore
 
     public function __construct()
     {
-        $this->uid = (new Ulid())->toBase32();
+        $this->uid = new Ulid()->toBase32();
         $this->createdAt = new \DateTimeImmutable();
     }
 

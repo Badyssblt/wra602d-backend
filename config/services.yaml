@@ -32,3 +32,7 @@ services:
 when@test:
     services:
         App\Notifier\MailerNotifierInterface: '@App\Notifier\NullMailerNotifier'
+
+        Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader:
+            alias: doctrine.fixtures.loader
+            public: true

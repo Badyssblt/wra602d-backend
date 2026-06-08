@@ -46,29 +46,30 @@ final class QuestController extends AbstractController
         // period doesn't leak into today's list.
         $claimedToday = $this->completions->findClaimedCodes(
             $user,
-            array_column(array_filter($quests, fn(array $q) => $q['kind'] === QuestCatalog::KIND_DAILY), 'code'),
+            array_column(array_filter($quests, fn (array $q) => QuestCatalog::KIND_DAILY === $q['kind']), 'code'),
             QuestCatalog::periodKey(QuestCatalog::KIND_DAILY, $now),
         );
         $claimedWeek = $this->completions->findClaimedCodes(
             $user,
-            array_column(array_filter($quests, fn(array $q) => $q['kind'] === QuestCatalog::KIND_WEEKLY), 'code'),
+            array_column(array_filter($quests, fn (array $q) => QuestCatalog::KIND_WEEKLY === $q['kind']), 'code'),
             QuestCatalog::periodKey(QuestCatalog::KIND_WEEKLY, $now),
         );
 
         $payload = array_map(
             function (array $quest) use ($user, $now, $claimedToday, $claimedWeek): array {
-                $claimedList = $quest['kind'] === QuestCatalog::KIND_WEEKLY ? $claimedWeek : $claimedToday;
+                $claimedList = QuestCatalog::KIND_WEEKLY === $quest['kind'] ? $claimedWeek : $claimedToday;
                 $progress = $this->catalog->bestProgressFor($user, $quest, $now);
+
                 return [
-                    'code'      => $quest['code'],
-                    'label'     => $quest['label'],
-                    'kind'      => $quest['kind'],
-                    'metric'    => $quest['metric'],
-                    'target'    => $quest['target'],
-                    'xpReward'  => $quest['xpReward'],
-                    'progress'  => $progress,
+                    'code' => $quest['code'],
+                    'label' => $quest['label'],
+                    'kind' => $quest['kind'],
+                    'metric' => $quest['metric'],
+                    'target' => $quest['target'],
+                    'xpReward' => $quest['xpReward'],
+                    'progress' => $progress,
                     'completed' => $progress >= $quest['target'],
-                    'claimed'   => in_array($quest['code'], $claimedList, true),
+                    'claimed' => in_array($quest['code'], $claimedList, true),
                 ];
             },
             $quests,
@@ -96,9 +97,9 @@ final class QuestController extends AbstractController
         $progress = $this->catalog->bestProgressFor($user, $quest, $now);
         if ($progress < $quest['target']) {
             return new JsonResponse([
-                'message'  => 'Objectif non atteint',
+                'message' => 'Objectif non atteint',
                 'progress' => $progress,
-                'target'   => $quest['target'],
+                'target' => $quest['target'],
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -112,10 +113,10 @@ final class QuestController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse([
-            'code'       => $code,
-            'xpAwarded'  => $xpDelta,
-            'totalXp'    => $user->getXp(),
-            'level'      => ProgressionPolicy::levelFromXp($user->getXp()),
+            'code' => $code,
+            'xpAwarded' => $xpDelta,
+            'totalXp' => $user->getXp(),
+            'level' => ProgressionPolicy::levelFromXp($user->getXp()),
         ]);
     }
 
@@ -125,6 +126,7 @@ final class QuestController extends AbstractController
         if (!$user instanceof User) {
             throw new AccessDeniedHttpException();
         }
+
         return $user;
     }
 }

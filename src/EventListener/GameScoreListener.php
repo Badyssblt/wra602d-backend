@@ -7,10 +7,10 @@ namespace App\EventListener;
 use App\Entity\GameScore;
 use App\Notifier\MailerNotifierInterface;
 use App\Repository\GameScoreRepository;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Events;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\Attribute\AsEntityListener;
 
 /**
  * Sends the "new best score" mail when a freshly-inserted GameScore is the

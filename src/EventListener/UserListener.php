@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
-use Symfony\Bridge\Doctrine\Attribute\AsEntityListener;
 
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: User::class)]
 #[AsEntityListener(event: Events::postPersist, method: 'postPersist', entity: User::class)]

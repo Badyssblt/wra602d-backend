@@ -11,7 +11,7 @@ final class BuildingPositionWithinGrid extends Constraint
 {
     public string $message = 'La position ({{ x }}, {{ z }}) est hors de la grille {{ size }}x{{ size }}.';
 
-    public function getTargets(): string|array
+    public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;
     }

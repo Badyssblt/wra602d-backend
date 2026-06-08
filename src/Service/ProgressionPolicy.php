@@ -32,6 +32,7 @@ final class ProgressionPolicy
     public static function xpForLevel(int $level): int
     {
         $level = max(0, $level);
+
         return self::LEVEL_CURVE_COEFF * $level * $level;
     }
 
@@ -40,6 +41,7 @@ final class ProgressionPolicy
     {
         $xp = max(0, $xp);
         $level = (int) floor(sqrt($xp / self::LEVEL_CURVE_COEFF));
+
         return min(self::MAX_LEVEL, $level);
     }
 
@@ -53,6 +55,7 @@ final class ProgressionPolicy
         if ($score <= 0) {
             return 0;
         }
+
         return intdiv($score, 1000) * self::XP_PER_KILO_SCORE;
     }
 
@@ -66,6 +69,7 @@ final class ProgressionPolicy
         if ($rawScore <= 0) {
             return 0;
         }
+
         return (int) floor($rawScore * self::scoreMultiplier($prestigeLevel));
     }
 
@@ -78,9 +82,16 @@ final class ProgressionPolicy
     {
         $level = max(0, $level);
         $unlocks = ['house', 'office', 'industry', 'park', 'road'];
-        if ($level >= 3) { $unlocks[] = 'university'; }
-        if ($level >= 5) { $unlocks[] = 'powerplant'; }
-        if ($level >= 7) { $unlocks[] = 'port'; }
+        if ($level >= 3) {
+            $unlocks[] = 'university';
+        }
+        if ($level >= 5) {
+            $unlocks[] = 'powerplant';
+        }
+        if ($level >= 7) {
+            $unlocks[] = 'port';
+        }
+
         return $unlocks;
     }
 

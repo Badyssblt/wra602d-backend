@@ -69,10 +69,10 @@ final readonly class ScoreUpsertService
         $this->em->flush();
 
         return [
-            'xpAwarded'       => $xpAwarded,
-            'score'           => $rawScore,
+            'xpAwarded' => $xpAwarded,
+            'score' => $rawScore,
             'multipliedScore' => $multiplied,
-            'isNewBest'       => $isNewBest,
+            'isNewBest' => $isNewBest,
         ];
     }
 }

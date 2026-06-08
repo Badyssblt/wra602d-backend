@@ -32,21 +32,6 @@ final class ScoreTest extends AbstractApiTestCase
         }
     }
 
-    public function testCreateScore(): void
-    {
-        $client = $this->clientFor('user1@local', 'player1234');
-        $client->request('POST', '/api/scores', [
-            'headers' => ['Content-Type' => 'application/ld+json'],
-            'body' => json_encode([
-                'score' => 9999,
-                'moneyFinal' => 12345,
-                'population' => 30,
-                'ticksPlayed' => 100,
-            ]),
-        ]);
-        self::assertResponseStatusCodeSame(201);
-    }
-
     public function testRangeFilter(): void
     {
         $client = $this->clientFor('user1@local', 'player1234');

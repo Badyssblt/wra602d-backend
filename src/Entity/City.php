@@ -134,7 +134,7 @@ class City
 
     public function __construct()
     {
-        $this->uid = (new Ulid())->toBase32();
+        $this->uid = new Ulid()->toBase32();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->buildings = new ArrayCollection();
@@ -213,6 +213,7 @@ class City
     public function setScore(int $score): static
     {
         $this->score = max(0, $score);
+
         return $this;
     }
 
@@ -224,6 +225,7 @@ class City
     public function setPopulation(int $population): static
     {
         $this->population = max(0, $population);
+
         return $this;
     }
 
@@ -235,6 +237,7 @@ class City
     public function setTicksPlayed(int $ticksPlayed): static
     {
         $this->ticksPlayed = max(0, $ticksPlayed);
+
         return $this;
     }
 

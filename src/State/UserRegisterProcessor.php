@@ -16,6 +16,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 final readonly class UserRegisterProcessor implements ProcessorInterface
 {
+    /**
+     * @param ProcessorInterface<User, User> $persistProcessor
+     */
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
@@ -25,9 +28,6 @@ final readonly class UserRegisterProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
     {
-        if (!$data instanceof User) {
-            throw new \LogicException('Expected User entity.');
-        }
         if (null !== $data->getPassword()) {
             $data->setPassword($this->hasher->hashPassword($data, $data->getPassword()));
         }
