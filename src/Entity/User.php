@@ -105,8 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Assert\NotBlank(groups: ['user:register'])]
-    #[Assert\Length(min: 8, max: 64, groups: ['user:register'])]
-    #[Assert\Regex(pattern: '/[0-9]/', message: 'Au moins un chiffre.', groups: ['user:register'])]
+    #[Assert\Length(min: 1, max: 64, groups: ['user:register'])]
     #[Groups(['user:write', 'user:register'])]
     private ?string $password = null;
 
