@@ -1,31 +1,84 @@
 {% extends 'admin/_layout.html.twig' %}
 {% block title %}{{ city.name }}{% endblock %}
 {% block content %}
-    <h1>{{ city.name }} <small style="color:#6b7280;">de {{ city.user.pseudonym }}</small></h1>
 
-    <section>
-        <p><strong>Argent:</strong> {{ city.money }} €</p>
-        <p><strong>Grille:</strong> {{ city.gridSize }}×{{ city.gridSize }}</p>
-        <p><strong>Bâtiments:</strong> {{ city.buildings|length }}</p>
-        <p><strong>Mise à jour:</strong> {{ city.updatedAt|date('d/m/Y H:i') }}</p>
-    </section>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+    <a href="{{ path('admin_cities_index') }}" style="color:var(--text-muted);text-decoration:none;font-size:13px;">← Villes</a>
+</div>
 
-    <section>
-        <h2>Plan</h2>
-        <div class="grid-render" style="grid-template-columns: repeat({{ city.gridSize }}, 18px);">
-            {% for z in 0..city.gridSize - 1 %}
-                {% for x in 0..city.gridSize - 1 %}
-                    {% set key = x ~ '-' ~ z %}
-                    {% set type = grid[key] ?? '' %}
-                    <div class="cell {{ type }}" title="{{ x }},{{ z }}{{ type ? ' — ' ~ type : '' }}"></div>
-                {% endfor %}
-            {% endfor %}
+<div style="display:grid;grid-template-columns:280px 1fr;gap:20px;">
+
+    <div class="card" style="align-self:start;">
+        <div class="card-header">
+            <div class="card-title">🏙️ Informations</div>
         </div>
-        <p style="margin-top: 12px;">
-            <span style="display:inline-block;width:14px;height:14px;background:#f59e0b;"></span> house
-            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#6366f1;"></span> office
-            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#10b981;"></span> park
-            &nbsp;<span style="display:inline-block;width:14px;height:14px;background:#6b7280;"></span> road
-        </p>
-    </section>
+        <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Nom</div>
+                    <div style="font-size:17px;font-weight:700;">{{ city.name }}</div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Joueur</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:12px;font-weight:700;color:white;">
+                            {{ city.user.pseudonym|first|upper }}
+                        </div>
+                        <a href="{{ path('admin_users_show', {uid: city.user.uid}) }}" style="font-weight:500;color:var(--primary);text-decoration:none;">{{ city.user.pseudonym }}</a>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+                        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Trésor</div>
+                        <div style="font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums;">{{ city.money|number_format(0,'.',' ') }} €</div>
+                    </div>
+                    <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+                        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Bâtiments</div>
+                        <div style="font-size:16px;font-weight:700;margin-top:2px;">{{ city.buildings|length }}</div>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Grille</div>
+                    <span class="badge badge-gray">{{ city.gridSize }} × {{ city.gridSize }}</span>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Dernière mise à jour</div>
+                    <div style="font-size:13px;color:var(--text-muted);">{{ city.updatedAt|date('d/m/Y à H:i') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="align-self:start;">
+        <div class="card-header">
+            <div class="card-title">🗺️ Plan de la ville</div>
+        </div>
+        <div class="card-body">
+            <div style="overflow:auto;">
+                <div class="grid-render" style="grid-template-columns: repeat({{ city.gridSize }}, 14px);">
+                    {% for z in 0..city.gridSize - 1 %}
+                        {% for x in 0..city.gridSize - 1 %}
+                            {% set key = x ~ '-' ~ z %}
+                            {% set type = grid[key] ?? '' %}
+                            <div class="cell {{ type }}" title="{{ x }},{{ z }}{{ type ? ' — ' ~ type : '' }}"></div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> Maison</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div> Bureau</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Parc</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#94a3b8;"></div> Route</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Industrie</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#a78bfa;"></div> Université</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Centrale</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#14b8a6;"></div> Port</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}

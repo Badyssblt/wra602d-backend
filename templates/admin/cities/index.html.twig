@@ -1,25 +1,47 @@
 {% extends 'admin/_layout.html.twig' %}
 {% block title %}Villes{% endblock %}
 {% block content %}
-    <h1>Villes</h1>
-    <section>
+
+<div style="margin-bottom:24px;font-size:13px;color:var(--text-muted);">{{ cities|length }} ville{{ cities|length > 1 ? 's' : '' }} sauvegardée{{ cities|length > 1 ? 's' : '' }}</div>
+
+<div class="card">
+    <div class="table-wrap">
         <table>
-            <thead><tr><th>Nom</th><th>Joueur</th><th>Argent</th><th>Grille</th><th>Bâtiments</th><th>Mise à jour</th><th></th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th>Joueur</th>
+                    <th>Trésor</th>
+                    <th>Grille</th>
+                    <th>Bâtiments</th>
+                    <th>Mise à jour</th>
+                    <th style="width:80px;"></th>
+                </tr>
+            </thead>
             <tbody>
             {% for c in cities %}
-                <tr>
-                    <td>{{ c.name }}</td>
-                    <td>{{ c.user.pseudonym }}</td>
-                    <td>{{ c.money }}</td>
-                    <td>{{ c.gridSize }}×{{ c.gridSize }}</td>
-                    <td>{{ c.buildings|length }}</td>
-                    <td>{{ c.updatedAt|date('d/m/Y H:i') }}</td>
-                    <td><a class="btn secondary" href="{{ path('admin_cities_show', {uid: c.uid}) }}">Voir</a></td>
-                </tr>
+            <tr>
+                <td style="font-weight:600;">{{ c.name }}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">
+                            {{ c.user.pseudonym|first|upper }}
+                        </div>
+                        <span>{{ c.user.pseudonym }}</span>
+                    </div>
+                </td>
+                <td class="muted" style="font-variant-numeric:tabular-nums;">{{ c.money|number_format(0,'.',' ') }} €</td>
+                <td><span class="badge badge-gray">{{ c.gridSize }}×{{ c.gridSize }}</span></td>
+                <td class="muted">{{ c.buildings|length }}</td>
+                <td class="muted">{{ c.updatedAt|date('d/m/Y H:i') }}</td>
+                <td><a class="btn btn-secondary btn-sm" href="{{ path('admin_cities_show', {uid: c.uid}) }}">Voir →</a></td>
+            </tr>
             {% else %}
-                <tr><td colspan="7"><em>Aucune ville sauvegardée.</em></td></tr>
+            <tr><td colspan="7" class="empty-state">Aucune ville sauvegardée.</td></tr>
             {% endfor %}
             </tbody>
         </table>
-    </section>
+    </div>
+</div>
+
 {% endblock %}

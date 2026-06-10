@@ -1,39 +1,77 @@
 {% extends 'admin/_layout.html.twig' %}
 {% block title %}Utilisateurs{% endblock %}
 {% block content %}
-    <h1>Utilisateurs</h1>
 
-    <form method="get" style="margin-bottom: 12px;">
-        <input type="text" name="q" value="{{ search }}" placeholder="email ou pseudonyme">
-        <button type="submit">Rechercher</button>
-        {% if search %}<a class="btn secondary" href="{{ path('admin_users_index') }}">Réinitialiser</a>{% endif %}
+<div class="flex items-center justify-between mb-24">
+    <form method="get" class="form-row">
+        <div class="form-group">
+            <label class="form-label">Recherche</label>
+            <input type="text" name="q" value="{{ search }}" placeholder="Email ou pseudonyme…" style="width:260px;">
+        </div>
+        <div style="align-self:flex-end;display:flex;gap:8px;">
+            <button type="submit" class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Rechercher
+            </button>
+            {% if search %}<a class="btn btn-secondary" href="{{ path('admin_users_index') }}">Réinitialiser</a>{% endif %}
+        </div>
     </form>
+    <div style="font-size:13px;color:var(--text-muted);">{{ total }} utilisateur{{ total > 1 ? 's' : '' }}</div>
+</div>
 
-    <section>
+<div class="card">
+    <div class="table-wrap">
         <table>
-            <thead><tr><th>Pseudonyme</th><th>Email</th><th>Rôles</th><th>Inscription</th><th>Actions</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Joueur</th>
+                    <th>Email</th>
+                    <th>Rôles</th>
+                    <th>Inscription</th>
+                    <th style="width:80px;"></th>
+                </tr>
+            </thead>
             <tbody>
             {% for u in paginator %}
-                <tr>
-                    <td>{{ u.pseudonym }}</td>
-                    <td>{{ u.email }}</td>
-                    <td>{{ u.roles|join(', ') }}</td>
-                    <td>{{ u.createdAt|date('d/m/Y') }}</td>
-                    <td><a class="btn secondary" href="{{ path('admin_users_show', {uid: u.uid}) }}">Voir</a></td>
-                </tr>
+            <tr>
+                <td>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;">
+                            {{ u.pseudonym|first|upper }}
+                        </div>
+                        <span style="font-weight:600;">{{ u.pseudonym }}</span>
+                    </div>
+                </td>
+                <td class="muted">{{ u.email }}</td>
+                <td>
+                    {% for role in u.roles %}
+                        {% if role == 'ROLE_ADMIN' %}<span class="badge badge-red">Admin</span>
+                        {% elseif role == 'ROLE_USER' %}<span class="badge badge-blue">User</span>
+                        {% else %}<span class="badge badge-gray">{{ role }}</span>
+                        {% endif %}
+                        &nbsp;
+                    {% endfor %}
+                </td>
+                <td class="muted">{{ u.createdAt|date('d/m/Y') }}</td>
+                <td><a class="btn btn-secondary btn-sm" href="{{ path('admin_users_show', {uid: u.uid}) }}">Voir →</a></td>
+            </tr>
             {% else %}
-                <tr><td colspan="5"><em>Aucun utilisateur.</em></td></tr>
+            <tr><td colspan="5" class="empty-state">Aucun utilisateur trouvé.</td></tr>
             {% endfor %}
             </tbody>
         </table>
+    </div>
 
-        {% set pageCount = (total / perPage)|round(0, 'ceil') %}
-        {% if pageCount > 1 %}
-            <nav style="margin-top: 12px;">
-                {% if page > 1 %}<a class="btn secondary" href="{{ path('admin_users_index', {q: search, page: page - 1}) }}">← Précédent</a>{% endif %}
-                <span style="margin: 0 12px;">Page {{ page }} / {{ pageCount }}</span>
-                {% if page < pageCount %}<a class="btn secondary" href="{{ path('admin_users_index', {q: search, page: page + 1}) }}">Suivant →</a>{% endif %}
-            </nav>
-        {% endif %}
-    </section>
+    {% set pageCount = (total / perPage)|round(0, 'ceil') %}
+    {% if pageCount > 1 %}
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border);">
+        <div style="font-size:13px;color:var(--text-muted);">Page {{ page }} / {{ pageCount }}</div>
+        <div style="display:flex;gap:8px;">
+            {% if page > 1 %}<a class="btn btn-secondary btn-sm" href="{{ path('admin_users_index', {q: search, page: page - 1}) }}">← Précédent</a>{% endif %}
+            {% if page < pageCount %}<a class="btn btn-secondary btn-sm" href="{{ path('admin_users_index', {q: search, page: page + 1}) }}">Suivant →</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}

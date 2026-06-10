@@ -1,38 +1,71 @@
 {% extends 'admin/_layout.html.twig' %}
 {% block title %}Scores{% endblock %}
 {% block content %}
-    <h1>Scores</h1>
 
-    <form method="get" style="margin-bottom: 12px; display: flex; gap: 8px;">
-        <input type="text" name="q" value="{{ q }}" placeholder="pseudonyme ou email">
-        <input type="number" name="min" value="{{ min }}" placeholder="score min">
-        <input type="number" name="max" value="{{ max }}" placeholder="score max">
-        <button type="submit">Filtrer</button>
-        <a class="btn secondary" href="{{ path('admin_scores_index') }}">Réinitialiser</a>
+<div class="flex items-center justify-between mb-24">
+    <form method="get" class="form-row">
+        <div class="form-group">
+            <label class="form-label">Joueur</label>
+            <input type="text" name="q" value="{{ q }}" placeholder="Pseudonyme ou email…" style="width:220px;">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Score min</label>
+            <input type="number" name="min" value="{{ min }}" placeholder="0" style="width:110px;">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Score max</label>
+            <input type="number" name="max" value="{{ max }}" placeholder="∞" style="width:110px;">
+        </div>
+        <div style="align-self:flex-end;display:flex;gap:8px;">
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+            <a class="btn btn-secondary" href="{{ path('admin_scores_index') }}">Réinitialiser</a>
+        </div>
     </form>
+</div>
 
-    <section>
+<div class="card">
+    <div class="table-wrap">
         <table>
-            <thead><tr><th>Joueur</th><th>Score</th><th>Population</th><th>Argent</th><th>Date</th><th></th></tr></thead>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Joueur</th>
+                    <th>Score</th>
+                    <th>Population</th>
+                    <th>Trésor final</th>
+                    <th>Date</th>
+                    <th style="width:80px;"></th>
+                </tr>
+            </thead>
             <tbody>
             {% for s in scores %}
-                <tr>
-                    <td>{{ s.user.pseudonym }}</td>
-                    <td>{{ s.score }}</td>
-                    <td>{{ s.population }}</td>
-                    <td>{{ s.moneyFinal }}</td>
-                    <td>{{ s.createdAt|date('d/m/Y H:i') }}</td>
-                    <td>
-                        <form method="post" action="{{ path('admin_scores_delete', {uid: s.uid}) }}" onsubmit="return confirm('Supprimer ce score ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ s.uid) }}">
-                            <button type="submit" class="danger">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td style="color:var(--text-muted);font-weight:600;font-variant-numeric:tabular-nums;">{{ loop.index }}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">
+                            {{ s.user.pseudonym|first|upper }}
+                        </div>
+                        <span style="font-weight:500;">{{ s.user.pseudonym }}</span>
+                    </div>
+                </td>
+                <td><strong style="color:#1d4ed8;font-variant-numeric:tabular-nums;">{{ s.score|number_format(0,'.',' ') }}</strong></td>
+                <td class="muted" style="font-variant-numeric:tabular-nums;">{{ s.population|number_format(0,'.',' ') }}</td>
+                <td class="muted" style="font-variant-numeric:tabular-nums;">{{ s.moneyFinal|number_format(0,'.',' ') }} €</td>
+                <td class="muted">{{ s.createdAt|date('d/m/Y H:i') }}</td>
+                <td>
+                    <form method="post" action="{{ path('admin_scores_delete', {uid: s.uid}) }}" onsubmit="return confirm('Supprimer ce score ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ s.uid) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
             {% else %}
-                <tr><td colspan="6"><em>Aucun score.</em></td></tr>
+            <tr><td colspan="7" class="empty-state">Aucun score trouvé.</td></tr>
             {% endfor %}
             </tbody>
         </table>
-    </section>
+    </div>
+</div>
+
 {% endblock %}
