@@ -16,6 +16,7 @@
 <form method="post">
     <h1>Connexion admin</h1>
     {% if error %}<div class="err">{{ error.messageKey|trans(error.messageData, 'security') }}</div>{% endif %}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     <label>Email<input type="email" name="email" value="{{ last_username }}" required autofocus></label>
     <label>Mot de passe<input type="password" name="password" required></label>
     <button type="submit">Se connecter</button>
