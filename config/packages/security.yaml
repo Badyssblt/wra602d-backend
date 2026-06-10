@@ -37,6 +37,8 @@ security:
                 check_path: admin_login
                 default_target_path: admin_dashboard
                 enable_csrf: false
+                username_parameter: email
+                password_parameter: password
             logout:
                 path: admin_logout
                 target: admin_login
