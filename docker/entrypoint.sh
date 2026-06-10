@@ -16,6 +16,14 @@ if [ ! -f vendor/autoload.php ]; then
 fi
 
 # 3) Attente de la BDD (parse DATABASE_URL)
+# SKIP_DB=1 → on démarre sans base (le front + l'API bootent, la connexion BDD
+# sera branchée plus tard). On saute alors l'attente, les migrations et le warmup BDD.
+if [ "${SKIP_DB:-0}" = "1" ]; then
+    echo "[entrypoint] SKIP_DB=1 — démarrage sans base de données."
+    php bin/console cache:clear --no-interaction || true
+    exec "$@"
+fi
+
 echo "[entrypoint] Attente de la base de données…"
 until php -r '
     $url = parse_url(getenv("DATABASE_URL"));
