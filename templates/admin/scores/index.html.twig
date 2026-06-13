@@ -2,11 +2,11 @@
 {% block title %}Scores{% endblock %}
 {% block content %}
 
-<div class="flex items-center justify-between mb-24">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap;">
     <form method="get" class="form-row">
         <div class="form-group">
             <label class="form-label">Joueur</label>
-            <input type="text" name="q" value="{{ q }}" placeholder="Pseudonyme ou email…" style="width:220px;">
+            <input type="text" name="q" value="{{ q }}" placeholder="Pseudonyme ou email..." style="width:220px;">
         </div>
         <div class="form-group">
             <label class="form-label">Score min</label>
@@ -14,11 +14,11 @@
         </div>
         <div class="form-group">
             <label class="form-label">Score max</label>
-            <input type="number" name="max" value="{{ max }}" placeholder="∞" style="width:110px;">
+            <input type="number" name="max" value="{{ max }}" placeholder="..." style="width:110px;">
         </div>
         <div style="align-self:flex-end;display:flex;gap:8px;">
             <button type="submit" class="btn btn-primary">Filtrer</button>
-            <a class="btn btn-secondary" href="{{ path('admin_scores_index') }}">Réinitialiser</a>
+            <a class="btn btn-secondary" href="{{ path('admin_scores_index') }}">Reinitialiser</a>
         </div>
     </form>
 </div>
@@ -32,24 +32,24 @@
                     <th>Joueur</th>
                     <th>Score</th>
                     <th>Population</th>
-                    <th>Trésor final</th>
+                    <th>Tresor final</th>
                     <th>Date</th>
-                    <th style="width:80px;"></th>
+                    <th style="width:90px;"></th>
                 </tr>
             </thead>
             <tbody>
             {% for s in scores %}
             <tr>
-                <td style="color:var(--text-muted);font-weight:600;font-variant-numeric:tabular-nums;">{{ loop.index }}</td>
+                <td style="color:var(--gray-3);font-weight:700;font-family:var(--mono);font-size:12px;">{{ loop.index }}</td>
                 <td>
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">
+                        <div style="width:24px;height:24px;background:var(--ink);display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--white);flex-shrink:0;font-family:var(--mono);">
                             {{ s.user.pseudonym|first|upper }}
                         </div>
-                        <span style="font-weight:500;">{{ s.user.pseudonym }}</span>
+                        <span style="font-weight:600;">{{ s.user.pseudonym }}</span>
                     </div>
                 </td>
-                <td><strong style="color:#1d4ed8;font-variant-numeric:tabular-nums;">{{ s.score|number_format(0,'.',' ') }}</strong></td>
+                <td><span style="font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;">{{ s.score|number_format(0,'.',' ') }}</span></td>
                 <td class="muted" style="font-variant-numeric:tabular-nums;">{{ s.population|number_format(0,'.',' ') }}</td>
                 <td class="muted" style="font-variant-numeric:tabular-nums;">{{ s.moneyFinal|number_format(0,'.',' ') }} €</td>
                 <td class="muted">{{ s.createdAt|date('d/m/Y H:i') }}</td>
@@ -61,7 +61,7 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7" class="empty-state">Aucun score trouvé.</td></tr>
+            <tr><td colspan="7" class="empty-state">Aucun score trouve.</td></tr>
             {% endfor %}
             </tbody>
         </table>

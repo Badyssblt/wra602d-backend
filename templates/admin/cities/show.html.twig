@@ -2,56 +2,51 @@
 {% block title %}{{ city.name }}{% endblock %}
 {% block content %}
 
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-    <a href="{{ path('admin_cities_index') }}" style="color:var(--text-muted);text-decoration:none;font-size:13px;">← Villes</a>
+<div style="margin-bottom:20px;">
+    <a href="{{ path('admin_cities_index') }}" style="color:var(--gray-4);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">← Villes</a>
 </div>
 
-<div style="display:grid;grid-template-columns:280px 1fr;gap:20px;">
+<div style="display:grid;grid-template-columns:260px 1fr;gap:1px;background:var(--gray-2);">
 
-    <div class="card" style="align-self:start;">
+    <div class="card" style="border:none;align-self:start;">
         <div class="card-header">
-            <div class="card-title">🏙️ Informations</div>
+            <div class="card-title">Informations</div>
         </div>
         <div class="card-body">
             <div style="display:flex;flex-direction:column;gap:14px;">
                 <div>
-                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Nom</div>
-                    <div style="font-size:17px;font-weight:700;">{{ city.name }}</div>
+                    <div style="font-size:10px;font-weight:700;color:var(--gray-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Nom</div>
+                    <div style="font-size:18px;font-weight:800;letter-spacing:-0.02em;">{{ city.name }}</div>
                 </div>
                 <div>
-                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Joueur</div>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:grid;place-items:center;font-size:12px;font-weight:700;color:white;">
-                            {{ city.user.pseudonym|first|upper }}
-                        </div>
-                        <a href="{{ path('admin_users_show', {uid: city.user.uid}) }}" style="font-weight:500;color:var(--primary);text-decoration:none;">{{ city.user.pseudonym }}</a>
-                    </div>
+                    <div style="font-size:10px;font-weight:700;color:var(--gray-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Joueur</div>
+                    <a href="{{ path('admin_users_show', {uid: city.user.uid}) }}" style="font-weight:600;color:var(--red);text-decoration:none;font-size:13px;">{{ city.user.pseudonym }}</a>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    <div style="background:#f8fafc;border-radius:8px;padding:10px;">
-                        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Trésor</div>
-                        <div style="font-size:16px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums;">{{ city.money|number_format(0,'.',' ') }} €</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--gray-2);">
+                    <div style="background:var(--white);padding:10px;">
+                        <div style="font-size:10px;color:var(--gray-3);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Tresor</div>
+                        <div style="font-size:15px;font-weight:700;margin-top:4px;font-family:var(--mono);">{{ city.money|number_format(0,'.',' ') }} €</div>
                     </div>
-                    <div style="background:#f8fafc;border-radius:8px;padding:10px;">
-                        <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Bâtiments</div>
-                        <div style="font-size:16px;font-weight:700;margin-top:2px;">{{ city.buildings|length }}</div>
+                    <div style="background:var(--white);padding:10px;">
+                        <div style="font-size:10px;color:var(--gray-3);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Batiments</div>
+                        <div style="font-size:15px;font-weight:700;margin-top:4px;font-family:var(--mono);">{{ city.buildings|length }}</div>
                     </div>
                 </div>
                 <div>
-                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Grille</div>
-                    <span class="badge badge-gray">{{ city.gridSize }} × {{ city.gridSize }}</span>
+                    <div style="font-size:10px;font-weight:700;color:var(--gray-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Grille</div>
+                    <span class="badge badge-gray">{{ city.gridSize }} x {{ city.gridSize }}</span>
                 </div>
                 <div>
-                    <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Dernière mise à jour</div>
-                    <div style="font-size:13px;color:var(--text-muted);">{{ city.updatedAt|date('d/m/Y à H:i') }}</div>
+                    <div style="font-size:10px;font-weight:700;color:var(--gray-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;">Mise a jour</div>
+                    <div style="font-size:12px;color:var(--gray-4);font-family:var(--mono);">{{ city.updatedAt|date('d/m/Y a H:i') }}</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card" style="align-self:start;">
+    <div class="card" style="border:none;align-self:start;">
         <div class="card-header">
-            <div class="card-title">🗺️ Plan de la ville</div>
+            <div class="card-title">Plan de la ville</div>
         </div>
         <div class="card-body">
             <div style="overflow:auto;">
@@ -72,7 +67,7 @@
                 <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Parc</div>
                 <div class="legend-item"><div class="legend-dot" style="background:#94a3b8;"></div> Route</div>
                 <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Industrie</div>
-                <div class="legend-item"><div class="legend-dot" style="background:#a78bfa;"></div> Université</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#a78bfa;"></div> Universite</div>
                 <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Centrale</div>
                 <div class="legend-item"><div class="legend-dot" style="background:#14b8a6;"></div> Port</div>
             </div>

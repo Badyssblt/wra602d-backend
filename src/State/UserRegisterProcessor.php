@@ -7,7 +7,9 @@ namespace App\State;
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Entity\City;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -23,6 +25,7 @@ final readonly class UserRegisterProcessor implements ProcessorInterface
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface $persistProcessor,
         private UserPasswordHasherInterface $hasher,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -37,6 +40,17 @@ final readonly class UserRegisterProcessor implements ProcessorInterface
 
         /** @var User $persisted */
         $persisted = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+
+        $cityName = trim((string) $data->getCityName());
+        if ($cityName !== '') {
+            $city = new City();
+            $city->setUser($persisted);
+            $city->setName(substr($cityName, 0, 80));
+            $city->setMoney(50_000);
+            $city->setGridSize(48);
+            $this->em->persist($city);
+            $this->em->flush();
+        }
 
         return $persisted;
     }

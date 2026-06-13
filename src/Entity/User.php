@@ -139,6 +139,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: City::class, orphanRemoval: true)]
     private Collection $cities;
 
+    /** Transient: city name provided at registration to auto-create the first city. Not persisted. */
+    #[Groups(['user:register'])]
+    private ?string $cityName = null;
+
     public function __construct()
     {
         $this->uid = new Ulid()->toBase32();
@@ -300,5 +304,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCities(): Collection
     {
         return $this->cities;
+    }
+
+    public function getCityName(): ?string
+    {
+        return $this->cityName;
+    }
+
+    public function setCityName(?string $cityName): static
+    {
+        $this->cityName = $cityName;
+
+        return $this;
     }
 }

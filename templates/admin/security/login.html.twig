@@ -6,161 +6,140 @@
     <title>Connexion — WRA602 Admin</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --forest: #0c2d22;
-            --amber:  #d97706;
-            --amber-lt: #fbbf24;
-        }
         body {
             font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
             min-height: 100vh;
+            background: #fff;
             display: grid;
             grid-template-columns: 1fr 1fr;
         }
 
-        /* Left panel — city illustration / brand */
+        /* Left panel */
         .left {
-            background: var(--forest);
+            background: #0f0f0f;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
+            padding: 48px 40px;
         }
-        .left::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 32px 32px;
-        }
-        .left-brand {
-            position: relative;
-            z-index: 1;
-        }
+        .left-brand {}
         .eyebrow {
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: rgba(251,191,36,0.6);
-            margin-bottom: 8px;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 10px;
         }
         .left-brand h1 {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 900;
-            letter-spacing: -0.04em;
-            color: #faf8f3;
+            letter-spacing: -0.05em;
+            color: #fff;
             line-height: 1;
         }
-        .left-brand h1 span { color: var(--amber-lt); }
-
-        .city-grid {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 220px;
-            z-index: 1;
-        }
-        /* CSS city skyline using divs */
-        .skyline {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: flex-end;
-            gap: 4px;
-            padding: 0 20px;
-        }
-        .bld {
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.06);
-            border-top: 2px solid rgba(255,255,255,0.1);
-        }
-        .bld.amber { background: rgba(251,191,36,0.15); border-top-color: rgba(251,191,36,0.3); }
-        .bld.lit   { background: rgba(251,191,36,0.08); }
-        .left-quote {
-            position: relative;
-            z-index: 2;
-            font-size: 13px;
+        .left-brand h1 span { color: #c0392b; }
+        .left-desc {
+            margin-top: 16px;
+            font-size: 14px;
             color: rgba(255,255,255,0.35);
             line-height: 1.6;
+            max-width: 280px;
+        }
+        .left-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .stat-line {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 14px;
+        }
+        .stat-line:first-child { border-top: none; }
+        .stat-num {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.04em;
+            font-variant-numeric: tabular-nums;
+            font-family: ui-monospace, monospace;
+        }
+        .stat-unit {
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 500;
         }
 
-        /* Right panel — form */
+        /* Right panel */
         .right {
-            background: #faf8f3;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            background-image:
-                linear-gradient(#e4dfd5 1px, transparent 1px),
-                linear-gradient(90deg, #e4dfd5 1px, transparent 1px);
-            background-size: 28px 28px;
+            padding: 48px 40px;
+            background: #fafafa;
         }
-        .form-card {
-            width: min(360px, 100%);
-            background: #fffef9;
-            border: 1px solid #e4dfd5;
-            border-radius: 8px;
-            padding: 36px 32px;
+        .form-wrap {
+            width: min(340px, 100%);
+        }
+        .form-head {
+            margin-bottom: 28px;
         }
         .form-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            color: #1c1917;
-            margin-bottom: 4px;
+            letter-spacing: -0.03em;
+            color: #111;
         }
         .form-sub {
             font-size: 13px;
-            color: #78716c;
-            margin-bottom: 28px;
+            color: #888;
+            margin-top: 4px;
         }
         .err {
-            background: #fef2f2;
-            border: 1px solid #fca5a5;
-            border-left: 3px solid #ef4444;
-            color: #b91c1c;
-            border-radius: 5px;
+            background: #fff0ee;
+            border: 1px solid #c0392b;
+            border-left: 3px solid #c0392b;
+            color: #c0392b;
             padding: 9px 12px;
             font-size: 13px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
-        label { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 14px;
+        }
         .label-text {
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #78716c;
+            color: #888;
         }
         input {
             width: 100%;
             padding: 10px 12px;
-            background: #faf8f3;
-            border: 1px solid #e4dfd5;
-            border-radius: 5px;
-            color: #1c1917;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            color: #111;
             font-size: 14px;
             font-family: inherit;
             outline: none;
-            transition: border-color 0.1s, box-shadow 0.1s;
+            transition: border-color 0.1s;
         }
-        input::placeholder { color: #c4b9ae; }
-        input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,0.12); }
+        input::placeholder { color: #ccc; }
+        input:focus { border-color: #111; }
         button {
             width: 100%;
-            padding: 11px;
-            margin-top: 6px;
-            background: var(--amber);
+            padding: 12px;
+            margin-top: 4px;
+            background: #c0392b;
             border: none;
-            border-radius: 5px;
-            color: #1c1917;
+            color: #fff;
             font-size: 14px;
             font-weight: 700;
             font-family: inherit;
@@ -168,8 +147,8 @@
             letter-spacing: 0.01em;
             transition: background 0.1s;
         }
-        button:hover { background: var(--amber-lt); }
-        button:active { transform: scale(0.99); }
+        button:hover { background: #a93226; }
+        button:active { opacity: 0.85; }
 
         @media (max-width: 640px) {
             body { grid-template-columns: 1fr; }
@@ -181,38 +160,33 @@
 
 <div class="left">
     <div class="left-brand">
-        <div class="eyebrow">Back-office</div>
+        <div class="eyebrow">Administration</div>
         <h1>WRA<span>602</span></h1>
+        <p class="left-desc">Panneau de gestion des utilisateurs, scores et villes.</p>
     </div>
 
-    <div class="city-grid">
-        <div class="skyline">
-            <div class="bld" style="width:18px;height:60px;"></div>
-            <div class="bld amber" style="width:24px;height:110px;"></div>
-            <div class="bld" style="width:16px;height:45px;"></div>
-            <div class="bld" style="width:30px;height:140px;"></div>
-            <div class="bld lit" style="width:20px;height:80px;"></div>
-            <div class="bld amber" style="width:14px;height:55px;"></div>
-            <div class="bld" style="width:28px;height:170px;"></div>
-            <div class="bld" style="width:22px;height:90px;"></div>
-            <div class="bld lit" style="width:16px;height:65px;"></div>
-            <div class="bld" style="width:36px;height:120px;"></div>
-            <div class="bld amber" style="width:18px;height:75px;"></div>
-            <div class="bld" style="width:26px;height:150px;"></div>
-            <div class="bld" style="width:14px;height:50px;"></div>
-            <div class="bld lit" style="width:20px;height:95px;"></div>
-            <div class="bld" style="width:24px;height:130px;"></div>
-            <div class="bld amber" style="width:18px;height:70px;"></div>
+    <div class="left-stats">
+        <div class="stat-line">
+            <span class="stat-num">100%</span>
+            <span class="stat-unit">acces controle</span>
+        </div>
+        <div class="stat-line">
+            <span class="stat-num">API</span>
+            <span class="stat-unit">temps reel</span>
+        </div>
+        <div class="stat-line">
+            <span class="stat-num">WRA</span>
+            <span class="stat-unit">back-office v1</span>
         </div>
     </div>
-
-    <p class="left-quote">Gérez les utilisateurs, scores<br>et villes en un seul endroit.</p>
 </div>
 
 <div class="right">
-    <div class="form-card">
-        <div class="form-title">Connexion</div>
-        <div class="form-sub">Accès réservé aux administrateurs</div>
+    <div class="form-wrap">
+        <div class="form-head">
+            <div class="form-title">Connexion</div>
+            <div class="form-sub">Acces reserve aux administrateurs</div>
+        </div>
 
         {% if error %}<div class="err">{{ error.messageKey|trans(error.messageData, 'security') }}</div>{% endif %}
 
@@ -225,7 +199,7 @@
                 <span class="label-text">Mot de passe</span>
                 <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••">
             </label>
-            <button type="submit">Accéder au back-office →</button>
+            <button type="submit">Acceder au back-office</button>
         </form>
     </div>
 </div>
